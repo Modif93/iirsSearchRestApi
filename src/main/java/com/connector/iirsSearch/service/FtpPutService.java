@@ -15,7 +15,7 @@ import java.net.SocketException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-@PropertySource("classpath:ftp.properties")
+@PropertySource("classpath:extern.properties")
 @Service
 public class FtpPutService {
     @Value("${host}")
