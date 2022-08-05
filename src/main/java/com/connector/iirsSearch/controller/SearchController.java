@@ -1,14 +1,17 @@
 package com.connector.iirsSearch.controller;
 
-
 import com.connector.iirsSearch.dto.SearchRequest;
 import com.connector.iirsSearch.dto.SearchResponse;
 import com.connector.iirsSearch.dto.SearchResponseRespData;
+import com.connector.iirsSearch.service.FtpPutService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.springframework.web.bind.annotation.*;
+
+import java.io.File;
+import java.io.IOException;
 
 @Slf4j
 @CrossOrigin
@@ -16,6 +19,8 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/searchReq")
 public class SearchController {
+
+    private final FtpPutService ftpPutService;
 
     @PostMapping("/cid")
     public SearchResponse cid(@RequestBody SearchRequest searchRequest) {
@@ -57,7 +62,11 @@ public class SearchController {
     }
 
     @PostMapping("/cid_series")
-    public SearchResponse cidSeries(@RequestBody SearchRequest searchRequest) {
+    public SearchResponse cidSeries(@RequestBody SearchRequest searchRequest) throws IOException {
+
+        // 조난발생 시뮬레이터 결과 전송(FTP Put)
+        ftpPutService.FTPUploader(new File("C:\\myPrivateWork\\putty\\cid_test.txt"));
+
         JSONObject left = new JSONObject();
         JSONObject top = new JSONObject();
         JSONObject right = new JSONObject();
@@ -109,7 +118,15 @@ public class SearchController {
     }
 
     @PostMapping("/ecid")
-    public SearchResponse ecid(@RequestBody SearchRequest searchRequest) {
+    public SearchResponse ecid(@RequestBody SearchRequest searchRequest) throws IOException {
+
+        // 조난발생 시뮬레이터 결과 전송(FTP Put)
+        ftpPutService.FTPUploader(new File("C:\\myPrivateWork\\putty\\ecid_test.txt"));
+
+        // CDB 검색을 통한 위치추정
+        //searchResult = getLastPosition(searchRequest);
+
+        // Response Mock Data
         JSONObject left = new JSONObject();
         JSONObject top = new JSONObject();
         JSONObject right = new JSONObject();
