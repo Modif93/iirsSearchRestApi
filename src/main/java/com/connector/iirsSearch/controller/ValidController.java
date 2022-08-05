@@ -2,6 +2,7 @@ package com.connector.iirsSearch.controller;
 
 
 import com.connector.iirsSearch.dto.*;
+import com.connector.iirsSearch.exception.RequestException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.json.simple.JSONArray;
@@ -11,15 +12,18 @@ import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.connector.iirsSearch.exception.RequestExceptCode.MANDATORY_PARAM_ERROR;
+
 @Slf4j
 @CrossOrigin
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/validReq")
 public class ValidController {
-
     @PostMapping("/target")
     public ValidTargetResponse target(@RequestBody ValidTargetRequest validTargetRequest) {
+
+        validateTarget(validTargetRequest);
 
         JSONObject target1 = new JSONObject();
         JSONObject target2 = new JSONObject();
@@ -36,7 +40,6 @@ public class ValidController {
         ValidTargetResponseRespData respData = new ValidTargetResponseRespData();
         respData.setRespId(validTargetRequest.getReqId());
         respData.setTarget(targetArr);
-
 
         return ValidTargetResponse.builder()
                 .respCode("OK-200")
@@ -69,5 +72,14 @@ public class ValidController {
                 .respCode("OK-200")
                 .respData(respData)
                 .build();
+    }
+
+    public void validateTarget(ValidTargetRequest request) throws RequestException {
+        if (request.getAddr1() == null || request.getAddr1().trim().isEmpty())
+            throw new RequestException(MANDATORY_PARAM_ERROR, "addr1");
+        if (request.getAddr2() == null || request.getAddr2().trim().isEmpty())
+            throw new RequestException(MANDATORY_PARAM_ERROR, "addr2");
+        if (request.getAddr3() == null || request.getAddr3().trim().isEmpty())
+            throw new RequestException(MANDATORY_PARAM_ERROR, "addr3");
     }
 }
