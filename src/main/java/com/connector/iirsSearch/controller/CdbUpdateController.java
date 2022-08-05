@@ -1,11 +1,11 @@
 package com.connector.iirsSearch.controller;
 
-
 import com.connector.iirsSearch.dto.UpdateRequest;
 import com.connector.iirsSearch.dto.UpdateResponse;
-import com.connector.iirsSearch.dto.UpdateResponseRespData;
+import com.connector.iirsSearch.service.CdbUpdateResponseService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
@@ -16,6 +16,7 @@ import java.time.LocalDate;
 @RestController
 @RequestMapping("/cdbUpdate")
 public class CdbUpdateController {
+    private final CdbUpdateResponseService cdbUpdateResponseService;
 
     @PutMapping("/Alarm")
     public void alarm() {
@@ -27,44 +28,32 @@ public class CdbUpdateController {
     }
 
     @PostMapping("/Command")
-    public UpdateResponse command(@RequestBody UpdateRequest updateRequest) {
-        UpdateResponseRespData updateResponseRespData = UpdateResponseRespData.builder()
-                .respId(updateRequest.getReqId())
-                .current(updateRequest.getLatest())
-                .previous(updateRequest.getCurrent())
-                .build();
+    public ResponseEntity<UpdateResponse> command(@RequestBody UpdateRequest updateRequest) {
+        // 요청 메시지 검증
 
-        return UpdateResponse.builder()
-                .respcode("OK-200")
-                .respData(updateResponseRespData)
-                .build();
-
+        // 응답
+        return ResponseEntity.ok(
+                cdbUpdateResponseService.commandResponse(updateRequest)
+        );
     }
 
     @PostMapping("/Recovery")
-    public UpdateResponse recovery(@RequestBody UpdateRequest updateRequest) {
-        UpdateResponseRespData updateResponseRespData = UpdateResponseRespData.builder()
-                .respId(updateRequest.getReqId())
-                .current(updateRequest.getPrevious())
-                .latest(updateRequest.getCurrent())
-                .build();
+    public ResponseEntity<UpdateResponse> recovery(@RequestBody UpdateRequest updateRequest) {
+        // 요청 메시지 검증
 
-        return UpdateResponse.builder()
-                .respcode("OK-200")
-                .respData(updateResponseRespData)
-                .build();
+        // 응답
+        return ResponseEntity.ok(
+                cdbUpdateResponseService.recoveryResponse(updateRequest)
+        );
     }
 
     @PostMapping("/OK")
-    public UpdateResponse Okay(@RequestBody UpdateRequest updateRequest) {
-        UpdateResponseRespData updateResponseRespData = UpdateResponseRespData.builder()
-                .respId(updateRequest.getReqId())
-                .current(updateRequest.getCurrent())
-                .build();
+    public ResponseEntity<UpdateResponse> Okay(@RequestBody UpdateRequest updateRequest) {
+        // 요청 메시지 검증
 
-        return UpdateResponse.builder()
-                .respcode("OK-200")
-                .respData(updateResponseRespData)
-                .build();
+        // 응답
+        return ResponseEntity.ok(
+                cdbUpdateResponseService.OkayResponse(updateRequest)
+        );
     }
 }

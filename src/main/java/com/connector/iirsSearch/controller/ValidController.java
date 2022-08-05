@@ -1,16 +1,12 @@
 package com.connector.iirsSearch.controller;
 
-
 import com.connector.iirsSearch.dto.*;
 import com.connector.iirsSearch.exception.RequestException;
+import com.connector.iirsSearch.service.ValidResponseService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import static com.connector.iirsSearch.exception.RequestExceptCode.MANDATORY_PARAM_ERROR;
 
@@ -20,58 +16,31 @@ import static com.connector.iirsSearch.exception.RequestExceptCode.MANDATORY_PAR
 @RestController
 @RequestMapping("/validReq")
 public class ValidController {
+    private final ValidResponseService validResponseService;
     @PostMapping("/target")
-    public ValidTargetResponse target(@RequestBody ValidTargetRequest validTargetRequest) {
+    public ResponseEntity<ValidTargetResponse> target(@RequestBody ValidTargetRequest validTargetRequest) {
 
+        // 요청 메시지 유효성 검사
         validateTarget(validTargetRequest);
 
-        JSONObject target1 = new JSONObject();
-        JSONObject target2 = new JSONObject();
-        JSONObject target3 = new JSONObject();
-        target1.put("0", "지리산");
-        target2.put("1", "설악산");
-        target3.put("2", "백두산");
+        // DB 조회
 
-        JSONArray targetArr = new JSONArray();
-        targetArr.add(target1);
-        targetArr.add(target2);
-        targetArr.add(target3);
-
-        ValidTargetResponseRespData respData = new ValidTargetResponseRespData();
-        respData.setRespId(validTargetRequest.getReqId());
-        respData.setTarget(targetArr);
-
-        return ValidTargetResponse.builder()
-                .respCode("OK-200")
-                .respData(respData)
-                .build();
+        // 응답
+        return ResponseEntity.ok(
+            validResponseService.targetResponse(validTargetRequest)
+        );
     }
 
     @PostMapping("/stations")
-    public ValidStationResponse stations(@RequestBody ValidStationRequest validStationRequest) {
-        ValidStationResponseRespData respData = new ValidStationResponseRespData();
-        List<ValidStationResponseRespDataStations> stations = new ArrayList<ValidStationResponseRespDataStations>();
-        if (validStationRequest.getType() == 1) {
-            for(int i = 0; i < validStationRequest.getStations().size(); i++)
-            {
-                ValidStationResponseRespDataStations station = ValidStationResponseRespDataStations.builder()
-                        .callSign(validStationRequest.getStations().get(i).getCallSign())
-                        .service("4G")
-                        .build();
-                stations.add(station);
-            }
-            respData.setStations(stations);
-            respData.setRespId(validStationRequest.getReqId());
-            respData.setCompany(validStationRequest.getCompany());
-        }
-        else {
-            // type=2 (지번주소), type=3 (법정동주소)
-        }
+    public ResponseEntity<ValidStationResponse> stations(@RequestBody ValidStationRequest validStationRequest) {
+        // 요청 메시지 유효성 검사
 
-        return ValidStationResponse.builder()
-                .respCode("OK-200")
-                .respData(respData)
-                .build();
+        // DB 조회
+
+        // 응답
+        return ResponseEntity.ok(
+            validResponseService.stationsResponse(validStationRequest)
+        );
     }
 
     public void validateTarget(ValidTargetRequest request) throws RequestException {
