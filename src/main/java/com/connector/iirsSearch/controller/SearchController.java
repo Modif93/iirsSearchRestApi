@@ -29,19 +29,6 @@ public class SearchController {
     private final SearchResponseService searchResponseService;
     private final FtpPutService ftpPutService;
 
-    @PostMapping("/cid")
-    public ResponseEntity<SearchResponse> cid(@RequestBody SearchRequest searchRequest) {
-        // 요청 메시지 유효성 검증
-        validateRescueDataRequest(searchRequest);
-
-        // 위치 추정
-
-        // 응답
-        return ResponseEntity.ok(
-                searchResponseService.cidResponse(searchRequest)
-        );
-    }
-
     @PostMapping("/cid_series")
     public ResponseEntity<SearchResponse> cidSeries(@RequestBody SearchRequest searchRequest) throws IOException {
 
