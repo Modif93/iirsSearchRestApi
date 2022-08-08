@@ -19,13 +19,13 @@ import java.util.Date;
 @Service
 public class FtpPutService {
     @Value("${host}")
-    private String host = "127.0.0.1";
+    private String host;
     @Value("${port}")
-    private int port = 21;
+    private int port;
     @Value("${user}")
-    private String user = "iirs";
+    private String user;
     @Value("${pwd}")
-    private String pwd = "1q2w3e4r";
+    private String pwd;
 
     public void FTPUploader(File file) throws IOException {
         try {
