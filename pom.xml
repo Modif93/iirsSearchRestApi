@@ -75,8 +75,13 @@
 			<artifactId>commons-net</artifactId>
 			<version>3.8.0</version>
 		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.osgeo/proj4j -->
+		<dependency>
+			<groupId>org.osgeo</groupId>
+			<artifactId>proj4j</artifactId>
+			<version>0.1.0</version>
+		</dependency>
 	</dependencies>
-
 	<build>
 		<plugins>
 			<plugin>
@@ -93,5 +98,4 @@
 			</plugin>
 		</plugins>
 	</build>
-
 </project>

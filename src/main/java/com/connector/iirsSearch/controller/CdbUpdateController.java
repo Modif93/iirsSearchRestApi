@@ -65,9 +65,13 @@ public class CdbUpdateController {
     }
 
     @PostMapping("/Command")
-    public ResponseEntity<UpdateResponse> command(@RequestBody UpdateRequest updateRequest) throws ParseException {
+    public ResponseEntity<UpdateResponse> command(
+            @RequestBody UpdateRequest updateRequest) throws ParseException {
         // 요청 메시지 검증
         validateCommand(updateRequest);
+
+        // CDB 업데이트 실행
+        // 실행 결과 오래걸리는데 응답은 어떻게...
 
         // 응답
         return ResponseEntity.ok(
@@ -76,9 +80,12 @@ public class CdbUpdateController {
     }
 
     @PostMapping("/Recovery")
-    public ResponseEntity<UpdateResponse> recovery(@RequestBody UpdateRequest updateRequest) throws ParseException {
+    public ResponseEntity<UpdateResponse> recovery(
+            @RequestBody UpdateRequest updateRequest) throws ParseException {
         // 요청 메시지 검증
         validateRecovery(updateRequest);
+
+        // CDB 복구 실행
 
         // 응답
         return ResponseEntity.ok(
@@ -87,9 +94,12 @@ public class CdbUpdateController {
     }
 
     @PostMapping("/OK")
-    public ResponseEntity<UpdateResponse> Okay(@RequestBody UpdateRequest updateRequest) throws ParseException {
+    public ResponseEntity<UpdateResponse> Okay(
+            @RequestBody UpdateRequest updateRequest) throws ParseException {
         // 요청 메시지 검증
         validateOkay(updateRequest);
+
+        // CDB 업데이트 확정
 
         // 응답
         return ResponseEntity.ok(

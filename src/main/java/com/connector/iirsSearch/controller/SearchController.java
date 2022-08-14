@@ -11,9 +11,20 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 
-import java.io.File;
-import java.io.IOException;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.regex.Pattern;
 
 import static com.connector.iirsSearch.exception.RequestExceptCode.MANDATORY_PARAM_ERROR;
@@ -30,12 +41,15 @@ public class SearchController {
     private final FtpPutService ftpPutService;
 
     @PostMapping("/cid_series")
-    public ResponseEntity<SearchResponse> cidSeries(@RequestBody SearchRequest searchRequest) throws IOException {
+    public ResponseEntity<SearchResponse> cidSeries(
+            @RequestBody SearchRequest searchRequest) throws IOException {
 
         // 요청 메시지 유효성 검증
         validateRescueDataRequest(searchRequest);
 
-        // 위치추정
+        // vsTasker 위치추정
+
+        // KML 파일 생성
 
         // 조난발생 시뮬레이터 결과 전송(FTP Put)
         ftpPutService.FTPUploader(new File("C:\\myPrivateWork\\putty\\cid_test.txt"));
@@ -46,15 +60,12 @@ public class SearchController {
         );
     }
 
-    @PostMapping("/ecid")
-    public ResponseEntity<SearchResponse> ecid(@RequestBody SearchRequest searchRequest) throws IOException {
+    //@PostMapping("/ecid")
+    @GetMapping("/ecid")
+    public ResponseEntity<SearchResponse> ecid(@RequestBody SearchRequest searchRequest)
+            throws IOException, ParserConfigurationException, TransformerException {
         // 요청 메시지 유효성 검증
-        validateRescueDataRequest(searchRequest);
-
-        // 위치추정
-
-        // 조난발생 시뮬레이터 결과 전송(FTP Put)
-        ftpPutService.FTPUploader(new File("C:\\myPrivateWork\\putty\\ecid_test.txt"));
+        //validateRescueDataRequest(searchRequest);
 
         // 응답
         return ResponseEntity.ok(
